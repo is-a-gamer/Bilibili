@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace BiliLive.Message
 {
-    public class DanmuMessage
+    public class DanmuMessage : BaseMessage
     {
         /// <summary>
         /// 用户UID
@@ -37,11 +37,6 @@ namespace BiliLive.Message
         /// </summary>
         public string MedalOwnerName;
 
-        /// <summary>
-        /// 原始数据 json字符串
-        /// </summary>
-        public string Metadata;
-
         public DanmuMessage()
         {
         }
@@ -56,14 +51,15 @@ namespace BiliLive.Message
             var info = json["info"];
             try
             {
+                //判断有没有佩戴粉丝勋章
                 if (info[3].ToArray().Length == 0)
                 {
                     return new DanmuMessage
                     {
                         //不用ToString 防止json为null
-                        UserId = long.Parse(info[2][0] + ""),
-                        Username = info[2][1] + "",
-                        Content = info[1] + "",
+                        UserId = long.Parse(info[2][0].ToString()),
+                        Username = info[2][1].ToString(),
+                        Content = info[1].ToString(),
                         Medal = "",
                         MedalLevel = "",
                         MedalOwnerName = "",

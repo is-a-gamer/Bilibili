@@ -1,6 +1,6 @@
 ﻿namespace BiliLive.Message
 {
-    public class NoticeMessage
+    public class NoticeMessage:BaseMessage
     {
         //通知消息,暂时不处理
     }

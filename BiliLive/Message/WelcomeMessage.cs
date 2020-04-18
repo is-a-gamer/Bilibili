@@ -4,12 +4,12 @@ using Newtonsoft.Json.Linq;
 
 namespace BiliLive.Message
 {
-    public class WelcomeMessage
+    public class WelcomeMessage:BaseMessage
     {
         /// <summary>
         /// 用户ID
         /// </summary>
-        public int UserId;
+        public long UserId;
 
         /// <summary>
         /// 用户名
@@ -36,11 +36,6 @@ namespace BiliLive.Message
         /// </summary>
         public int MockEffect;
 
-        /// <summary>
-        /// 原始数据 json字符串
-        /// </summary>
-        public string Metadata;
-
         /*
          {
            "cmd": "WELCOME",
@@ -65,7 +60,7 @@ namespace BiliLive.Message
             var data = json["data"];
             return new WelcomeMessage
             {
-                UserId = int.Parse(data["uid"].ToString()),
+                UserId = long.Parse(data["uid"].ToString()),
                 Username = data["uname"].ToString(),
                 Admin = bool.Parse(data["is_admin"].ToString()),
                 Svip = int.Parse(data["svip"].ToString()),

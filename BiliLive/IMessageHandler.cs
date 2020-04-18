@@ -17,5 +17,10 @@ namespace BiliLive
         Task GiftMessageHandlerAsync(GiftMessage giftMessage);
 
         Task WelcomeMessageHandlerAsync(WelcomeMessage welcomeMessage);
+
+        Task ComboEndMessageHandlerAsync(ComboEndMessage comboEndMessage);
+        Task RoomUpdateMessageHandlerAsync(RoomUpdateMessage roomUpdateMessage);
+        Task WelcomeGuardMessageHandlerAsync(WelcomeGuardMessage welcomeGuardMessage);
+
     }
 }

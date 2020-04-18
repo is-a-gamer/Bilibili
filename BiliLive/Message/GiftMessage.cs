@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 
 namespace BiliLive.Message
 {
-    public class GiftMessage
+    public class GiftMessage:BaseMessage
     {
         /// <summary>
         /// 礼物名称
@@ -41,11 +41,6 @@ namespace BiliLive.Message
         /// TODO 没收集类型
         /// </summary>
         public string GiftType;
-
-        /// <summary>
-        /// 元数据
-        /// </summary>
-        public string Metadata;
 
         public static GiftMessage JsonToGiftMessage(JObject json)
         {

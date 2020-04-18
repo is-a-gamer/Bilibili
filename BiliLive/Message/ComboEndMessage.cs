@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace BiliLive.Message
 {
     // TODO 还需要收集数据
-    public class ComboEndMessage
+    public class ComboEndMessage:BaseMessage
     {
         /// <summary>
         /// 用户UID
@@ -71,7 +70,8 @@ namespace BiliLive.Message
                 BatchComboNum = int.Parse(data["gift_num"].ToString()),
                 Price = int.Parse(data["gift_num"].ToString()),
                 GiftName = data["gift_name"].ToString(),
-                GiftId = int.Parse(data["gift_id"].ToString())
+                GiftId = int.Parse(data["gift_id"].ToString()),
+                Metadata = JsonConvert.SerializeObject(json)
             };
         }
 

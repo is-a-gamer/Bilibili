@@ -52,10 +52,13 @@
         <Compile Include="LiveRoom.cs" />
         <Compile Include="IMessageHandler.cs" />
         <Compile Include="MessageDispatcher.cs" />
+        <Compile Include="Message\BaseMessage.cs" />
         <Compile Include="Message\ComboEndMessage.cs" />
         <Compile Include="Message\DanmuMessage.cs" />
         <Compile Include="Message\GiftMessage.cs" />
         <Compile Include="Message\NoticeMessage.cs" />
+        <Compile Include="Message\RoomUpdateMessage.cs" />
+        <Compile Include="Message\WelcomeGuardMessage.cs" />
         <Compile Include="Message\WelcomeMessage.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>

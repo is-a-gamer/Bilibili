@@ -30,24 +30,24 @@ namespace BiliLive
                     Console.WriteLine("// TODO 系统消息未处理");
                     break;
                 case "COMBO_END":
-                    Console.WriteLine("// TODO 礼物连击的结束信息未处理");
+                    messageHandler.ComboEndMessageHandlerAsync(ComboEndMessage.JsonToComboEndMessage(message));
                     break;
                 case "SUPER_CHAT_MESSAGE":
                     Console.WriteLine("// TODO 醒目留言信息未处理");
                     break;
                 case "ROOM_REAL_TIME_MESSAGE_UPDATE":
-                    Console.WriteLine("// TODO 房间实时信息更新");
+                    messageHandler.RoomUpdateMessageHandlerAsync(RoomUpdateMessage.JsonToRoomUpdateMessage(message));
                     break;
                 case "SUPER_CHAT_MESSAGE_JPN":
-                    Console.WriteLine("// TODO 醒目留言信息未处理");
+                    Console.WriteLine("// TODO 另一种醒目留言信息未处理");
                     break;
                 case "WELCOME_GUARD":
-                    Console.WriteLine("// TODO 房管进入信息未处理");
+                    messageHandler.WelcomeGuardMessageHandlerAsync(WelcomeGuardMessage.JsonToWelcomeGuardMessage(message));
                     break;
                 case "ROOM_RANK":
                     Console.WriteLine("// TODO 房间排行信息未处理");
                     break;
-                case "ENTRY_EFFECT" :
+                case "ENTRY_EFFECT":
                     Console.WriteLine("// TODO 貌似是舰长的进入信息");
                     break;
                 case "COMBO_SEND":
@@ -55,6 +55,8 @@ namespace BiliLive
                     break;
                 case "ANCHOR_LOT_START":
                     Console.WriteLine("// 天选时刻");
+                    break;
+                case "ACTIVITY_BANNER_UPDATE_V2":
                     break;
                 default:
                     Console.WriteLine("// TODO 未记录的信息");

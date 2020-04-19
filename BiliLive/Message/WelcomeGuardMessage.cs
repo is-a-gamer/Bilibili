@@ -33,7 +33,8 @@ namespace BiliLive.Message
                 UserId = long.Parse(json["data"]["uid"].ToString()),
                 Username = json["data"]["username"].ToString(),
                 GuardLevel = int.Parse(json["data"]["guard_level"].ToString()),
-                MockEffect = int.Parse(json["data"]["mock_effect"].ToString())
+                MockEffect = int.Parse(json["data"]["mock_effect"].ToString()),
+                Metadata = JsonConvert.SerializeObject(json)
             };
         }
         

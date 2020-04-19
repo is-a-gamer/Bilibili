@@ -58,6 +58,8 @@ namespace BiliLive
                     break;
                 case "ACTIVITY_BANNER_UPDATE_V2":
                     break;
+                case "ROOM_CHANGE":
+                    break;
                 default:
                     Console.WriteLine("// TODO 未记录的信息");
                     break;

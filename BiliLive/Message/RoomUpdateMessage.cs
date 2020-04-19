@@ -9,7 +9,7 @@ namespace BiliLive.Message
         /// <summary>
         /// 真正的房间号
         /// </summary>
-        public int Roomid;
+        public int RoomId;
 
         /// <summary>
         /// 主播当前的粉丝数量
@@ -25,9 +25,10 @@ namespace BiliLive.Message
         {
             return new RoomUpdateMessage
             {
-                Roomid = int.Parse(json["data"]["roomid"].ToString()),
+                RoomId = int.Parse(json["data"]["roomid"].ToString()),
                 Fans = int.Parse(json["data"]["fans"].ToString()),
-                RedNotice = int.Parse(json["data"]["red_notice"].ToString())
+                RedNotice = int.Parse(json["data"]["red_notice"].ToString()),
+                Metadata = JsonConvert.SerializeObject(json)
             };
         }
         public static RoomUpdateMessage JsonToRoomUpdateMessage(string jsonStr)

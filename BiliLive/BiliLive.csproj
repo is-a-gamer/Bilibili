@@ -57,6 +57,8 @@
         <Compile Include="Message\DanmuMessage.cs" />
         <Compile Include="Message\GiftMessage.cs" />
         <Compile Include="Message\NoticeMessage.cs" />
+        <Compile Include="Message\RoomChangeMessage.cs" />
+        <Compile Include="Message\RoomRankMessage.cs" />
         <Compile Include="Message\RoomUpdateMessage.cs" />
         <Compile Include="Message\WelcomeGuardMessage.cs" />
         <Compile Include="Message\WelcomeMessage.cs" />

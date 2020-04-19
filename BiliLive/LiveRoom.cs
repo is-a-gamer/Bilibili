@@ -74,7 +74,7 @@ namespace BiliLive
                 return false;
             }
 
-            _roomStream = Stream.Synchronized(_tcpClient.GetStream());
+            _roomStream = _tcpClient.GetStream();
             //判断能不能写入数据
             if (!_roomStream.CanWrite)
             {
@@ -118,18 +118,13 @@ namespace BiliLive
         {
             while (_roomStream.CanRead)
             {
-                // Console.WriteLine("进程卡死 1");
                 var headBuffer = new byte[ProtocolHeadLength];
                 //先读取一次头信息
                 //BUG 高频率发送弹幕只能读取到一条
-                // Console.WriteLine("进程卡死 2");
                 await _roomStream.ReadAsync(headBuffer, 0, ProtocolHeadLength);
                 //解析头信息
-                // Console.WriteLine("进程卡死 3");
                 DanmuHead danmuHead = DanmuHead.BufferToDanmuHead(headBuffer);
-                // Console.WriteLine($"一条新的消息,action:{danmuHead.Action},version:{danmuHead.Version}");
                 //判断协议
-                // Console.WriteLine("进程卡死 4");
                 if (danmuHead.HeaderLength != ProtocolHeadLength)
                 {
                     continue;
@@ -139,36 +134,31 @@ namespace BiliLive
                 byte[] dataBuffer;
                 if (danmuHead.Action == 3)
                 {
-                    // Console.WriteLine("进程卡死 5-1-1 Action3");
                     //给服务器发送心跳信息后的回应信息,所带的数据是直播间的观看人数(人气值)
                     dataBuffer = new byte[danmuHead.MessageLength()];
-                    // Console.WriteLine("进程卡死 5-1-2");
                     await _roomStream.ReadAsync(dataBuffer, 0, danmuHead.MessageLength());
-                    // Console.WriteLine("进程卡死 5-1-3");
                     var audiences = EndianBitConverter.BigEndian.ToInt32(dataBuffer, 0);
-                    // Console.WriteLine("进程卡死 5-1-4");
                     _messageHandler.AudiencesHandlerAsync(audiences);
-                    // Console.WriteLine("进程卡死 5-1-5");
                     continue;
                 }
 
-                string s;
+                string tmpData;
                 JObject json;
-                if (danmuHead.Action == 5)
+                if (danmuHead.Action == 5 && danmuHead.Version == 2)
                 {
                     //有效负载为礼物、弹幕、公告等内容数据
-                    if (danmuHead.Version == 2)
+                    //读取数据放入缓冲区
+                    dataBuffer = new byte[danmuHead.MessageLength()];
+                    await _roomStream.ReadAsync(dataBuffer, 0, danmuHead.MessageLength());
+                    //之后把数据放入到内存流
+                    using (var ms = new MemoryStream(dataBuffer, 2, danmuHead.MessageLength() - 2))
                     {
-                        //读取数据放入缓冲区
-                        dataBuffer = new byte[danmuHead.MessageLength()];
-                        await _roomStream.ReadAsync(dataBuffer, 0, danmuHead.MessageLength());
-                        //之后把数据放入到内存流
-                        using (var ms = new MemoryStream(dataBuffer, 2, danmuHead.MessageLength() - 2))
+                        //使用内存流生成解压流(压缩流) 
+                        var deflate = new DeflateStream(ms, CompressionMode.Decompress);
+                        var headerbuffer = new byte[ProtocolHeadLength];
+                        try
                         {
-                            //使用内存流生成解压流(压缩流) 
-                            var deflate = new DeflateStream(ms, CompressionMode.Decompress);
-                            var headerbuffer = new byte[ProtocolHeadLength];
-                            try
+                            while (true)
                             {
                                 await deflate.ReadAsync(headerbuffer, 0, ProtocolHeadLength);
                                 danmuHead = DanmuHead.BufferToDanmuHead(headerbuffer);
@@ -178,27 +168,20 @@ namespace BiliLive
                                 json = JObject.Parse(jsonStr);
                                 messageDispatcher.DispatchAsync(json, _messageHandler);
                             }
-                            catch (Exception e)
-                            {
-                                //TODO 错误等待处理
-                                Console.WriteLine(e);
-                            }
                         }
-                        continue;
+                        catch (Exception)
+                        {
+                            //读数据超出长度
+                        }
                     }
 
-                    dataBuffer = new byte[danmuHead.MessageLength()];
-                    await _roomStream.ReadAsync(dataBuffer, 0, danmuHead.MessageLength());
-                    s = Encoding.UTF8.GetString(dataBuffer);
-                    json = JObject.Parse(s);
-                    messageDispatcher.DispatchAsync(json, _messageHandler);
                     continue;
                 }
 
                 dataBuffer = new byte[danmuHead.MessageLength()];
                 await _roomStream.ReadAsync(dataBuffer, 0, danmuHead.MessageLength());
-                s = Encoding.UTF8.GetString(dataBuffer);
-                json = JObject.Parse(s);
+                tmpData = Encoding.UTF8.GetString(dataBuffer);
+                json = JObject.Parse(tmpData);
                 messageDispatcher.DispatchAsync(json, _messageHandler);
             }
         }
@@ -250,10 +233,7 @@ namespace BiliLive
         {
             try
             {
-                if (!_tcpClient.Connected)
-                {
-                    _connected = false;
-                }
+                _connected = _tcpClient.Connected;
 
                 while (_connected)
                 {
@@ -277,6 +257,5 @@ namespace BiliLive
                 throw;
             }
         }
-
     }
 }

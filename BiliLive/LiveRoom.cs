@@ -20,27 +20,27 @@ namespace BiliLive
         private int _shotRoomId;
 
         //10秒无法连接判定连接失败
-        private HttpClient _httpClient = new HttpClient {Timeout = TimeSpan.FromSeconds(10)};
+        private readonly HttpClient _httpClient = new HttpClient {Timeout = TimeSpan.FromSeconds(10)};
         private int _roomId;
-        private TcpClient _tcpClient = new TcpClient();
+        private readonly TcpClient _tcpClient = new TcpClient();
         private Stream _roomStream;
         private const short ProtocolVersion = 2;
         private const int ProtocolHeadLength = 16;
-        private IMessageHandler _messageHandler;
-        private IMessageDispatcher messageDispatcher;
+        private readonly IMessageHandler _messageHandler;
+        private readonly IMessageDispatcher _messageDispatcher;
         private bool _connected = false;
 
         public LiveRoom(int roomId, IMessageHandler messageHandler)
         {
             _shotRoomId = roomId;
-            messageDispatcher = new MessageDispatcher();
+            _messageDispatcher = new MessageDispatcher();
             _messageHandler = messageHandler;
         }
 
         public LiveRoom(int roomId, IMessageHandler messageHandler, IMessageDispatcher messageDispatcher)
         {
             _shotRoomId = roomId;
-            this.messageDispatcher = messageDispatcher;
+            this._messageDispatcher = messageDispatcher;
             _messageHandler = messageHandler;
         }
 
@@ -107,6 +107,7 @@ namespace BiliLive
                 return false;
             }
 
+            _connected = true;
             //循环发送心跳信息
 #pragma warning disable 4014
             SendHeartbeatLoop();
@@ -116,7 +117,7 @@ namespace BiliLive
 
         public async Task ReadMessageLoop()
         {
-            while (_roomStream.CanRead)
+            while (_connected)
             {
                 var headBuffer = new byte[ProtocolHeadLength];
                 //先读取一次头信息
@@ -166,7 +167,7 @@ namespace BiliLive
                                 await deflate.ReadAsync(messageBuffer, 0, danmuHead.MessageLength());
                                 var jsonStr = Encoding.UTF8.GetString(messageBuffer, 0, danmuHead.MessageLength());
                                 json = JObject.Parse(jsonStr);
-                                messageDispatcher.DispatchAsync(json, _messageHandler);
+                                _messageDispatcher.DispatchAsync(json, _messageHandler);
                             }
                         }
                         catch (Exception)
@@ -182,7 +183,7 @@ namespace BiliLive
                 await _roomStream.ReadAsync(dataBuffer, 0, danmuHead.MessageLength());
                 tmpData = Encoding.UTF8.GetString(dataBuffer);
                 json = JObject.Parse(tmpData);
-                messageDispatcher.DispatchAsync(json, _messageHandler);
+                _messageDispatcher.DispatchAsync(json, _messageHandler);
             }
         }
 
@@ -246,16 +247,37 @@ namespace BiliLive
                     catch (Exception e)
                     {
                         _connected = false;
-                        Console.WriteLine(e);
-                        throw;
+                        throw e;
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 _connected = false;
-                throw;
+                throw e;
             }
+        }
+
+        //关闭连接的方法
+        public void Disconnect()
+        {
+            try
+            {
+                _connected = false;
+                _tcpClient.Dispose();
+                _roomStream = null;
+            }
+            catch (Exception e)
+            {
+                //错误处理
+                throw e;
+            }
+        }
+
+        //返回连接的状态
+        public bool Connected()
+        {
+            return _connected;
         }
     }
 }

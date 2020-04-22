@@ -9,12 +9,6 @@ namespace Example
         public static void Main(string[] args)
         {
             Start();
-            // Console.WriteLine(TimeSpan.Ticks);
-            // Int64 tiks = Int64.Parse();
-            // Int64 i = 1587273840 * tiks;
-            // var date = new DateTime(i + new DateTime(1970, 1, 1, 8, 0, 0).Ticks);
-            // Console.WriteLine(date);
-
             Console.WriteLine("按回车结束");
             Console.ReadLine();
         }
@@ -27,6 +21,7 @@ namespace Example
             LiveHandler liveHandler = new LiveHandler();
             LiveRoom room = new LiveRoom(22128505, liveHandler);
             //等待连接,该方法会反回是否连接成功
+            //或者使用room.Connected,该属性会反馈连接状态
             if (!await room.ConnectAsync())
             {
                 Console.WriteLine("连接失败");

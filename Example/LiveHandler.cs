@@ -7,7 +7,8 @@ namespace Example
     public class LiveHandler:IMessageHandler
     {
         //可以放置自己的参数用来使用,比如WPF的window对象
-        public string Param;
+        public bool Param;
+
         public async Task DanmuMessageHandlerAsync(DanmuMessage danmuMessage)
         {
             Console.WriteLine($"发送者:{danmuMessage.Username},内容:{danmuMessage.Content}");
@@ -46,6 +47,16 @@ namespace Example
         public async Task WelcomeGuardMessageHandlerAsync(WelcomeGuardMessage welcomeGuardMessage)
         {
             Console.WriteLine($"房管{welcomeGuardMessage.Username}进入直播间");
+        }
+
+        public async Task LiveStartMessageHandlerAsync(int roomId)
+        {
+            Console.WriteLine("直播开始");
+        }
+
+        public async Task LiveStopMessageHandlerAsync(int roomId)
+        {
+            Console.WriteLine("直播关闭");
         }
     }
 }

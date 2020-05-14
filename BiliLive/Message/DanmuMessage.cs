@@ -30,7 +30,7 @@ namespace BiliLive.Message
         /// <summary>
         /// 勋章等级
         /// </summary>
-        public string MedalLevel;
+        public int MedalLevel;
 
         /// <summary>
         /// 勋章所有者
@@ -49,6 +49,14 @@ namespace BiliLive.Message
             }
 
             var info = json["info"];
+            // if (int.Parse(info[2][3].ToString()) != 0 && int.Parse(info[2][4].ToString()) != 0 )
+            // {
+            //     Console.WriteLine("老爷");
+            // }
+            // if (int.Parse(info[7].ToString())!=0 && int.Parse(info[7].ToString())!=3)
+            // {
+            //     Console.WriteLine("老爷");
+            // }
             try
             {
                 //判断有没有佩戴粉丝勋章
@@ -61,7 +69,7 @@ namespace BiliLive.Message
                         Username = info[2][1].ToString(),
                         Content = info[1].ToString(),
                         Medal = "",
-                        MedalLevel = "",
+                        MedalLevel = 0,
                         MedalOwnerName = "",
                         Metadata = JsonConvert.SerializeObject(json)
                     };
@@ -73,7 +81,7 @@ namespace BiliLive.Message
                     Username = info[2][1].ToString(),
                     Content = info[1].ToString(),
                     Medal = info[3][1].ToString(),
-                    MedalLevel = info[3][0].ToString(),
+                    MedalLevel = (int) info[3][0],
                     MedalOwnerName = info[3][2].ToString(),
                     Metadata = JsonConvert.SerializeObject(json)
                 };

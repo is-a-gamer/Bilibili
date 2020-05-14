@@ -54,6 +54,18 @@ namespace BiliLive
         /// <param name="welcomeGuardMessage"></param>
         /// <returns></returns>
         Task WelcomeGuardMessageHandlerAsync(WelcomeGuardMessage welcomeGuardMessage);
+        /// <summary>
+        /// 直播间开启的通知
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <returns></returns>
+        Task LiveStartMessageHandlerAsync(int roomId);
+        /// <summary>
+        /// 直播间关闭的通知
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <returns></returns>
+        Task LiveStopMessageHandlerAsync(int roomId);
 
     }
 }

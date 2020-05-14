@@ -43,7 +43,11 @@ namespace BiliLive
             this._messageDispatcher = messageDispatcher;
             _messageHandler = messageHandler;
         }
-
+        
+        /// <summary>
+        /// 开启连接
+        /// </summary>
+        /// <returns></returns>
         public async Task<bool> ConnectAsync()
         {
             var tmpData =
@@ -114,7 +118,10 @@ namespace BiliLive
 #pragma warning restore 4014
             return true;
         }
-
+        /// <summary>
+        /// 循环读取消息,禁止重复调用
+        /// </summary>
+        /// <returns></returns>
         public async Task ReadMessageLoop()
         {
             while (_connected)
@@ -145,7 +152,7 @@ namespace BiliLive
 
                 string tmpData;
                 JObject json;
-                if (danmuHead.Action == 5 && danmuHead.Version == 2)
+                if (danmuHead.Action == 5 && danmuHead.Version == ProtocolVersion)
                 {
                     //有效负载为礼物、弹幕、公告等内容数据
                     //读取数据放入缓冲区
@@ -182,11 +189,23 @@ namespace BiliLive
                 dataBuffer = new byte[danmuHead.MessageLength()];
                 await _roomStream.ReadAsync(dataBuffer, 0, danmuHead.MessageLength());
                 tmpData = Encoding.UTF8.GetString(dataBuffer);
-                json = JObject.Parse(tmpData);
+                try
+                {
+                    json = JObject.Parse(tmpData);
+                }
+                catch (JsonReaderException e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
                 _messageDispatcher.DispatchAsync(json, _messageHandler);
             }
         }
-
+        /// <summary>
+        /// 发送加入房间的消息
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public async Task<bool> SendJoinMsgAsync(string token)
         {
             var packageModel = new Dictionary<string, object>
@@ -202,12 +221,26 @@ namespace BiliLive
             await SendSocketDataAsync(7, body);
             return true;
         }
-
+        /// <summary>
+        /// 发送消息的方法
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="body"></param>
+        /// <returns></returns>
         public Task SendSocketDataAsync(int action, string body)
         {
             return SendSocketDataAsync(ProtocolHeadLength, ProtocolVersion, action, 1, body);
         }
-
+        
+        /// <summary>
+        /// 发送消息的方法
+        /// </summary>
+        /// <param name="headLength"></param>
+        /// <param name="version"></param>
+        /// <param name="action"></param>
+        /// <param name="param"></param>
+        /// <param name="body"></param>
+        /// <returns></returns>
         public async Task SendSocketDataAsync(short headLength, short version, int action, int param,
             string body)
         {
@@ -229,7 +262,11 @@ namespace BiliLive
 
             await _roomStream.WriteAsync(buffer, 0, buffer.Length);
         }
-
+        /// <summary>
+        /// 循环发送心跳,禁止重复调用
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         private async Task SendHeartbeatLoop()
         {
             try
@@ -253,12 +290,15 @@ namespace BiliLive
             }
             catch (Exception e)
             {
-                _connected = false;
+                Disconnect();
                 throw e;
             }
         }
 
-        //关闭连接的方法
+        /// <summary>
+        /// 关闭连接的方法
+        /// </summary>
+        /// <exception cref="Exception"></exception>
         public void Disconnect()
         {
             try
@@ -274,7 +314,10 @@ namespace BiliLive
             }
         }
 
-        //返回连接的状态
+        /// <summary>
+        /// 反回连接的状态
+        /// </summary>
+        /// <returns></returns>
         public bool Connected()
         {
             return _connected;

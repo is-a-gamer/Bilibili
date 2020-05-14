@@ -17,48 +17,47 @@ namespace BiliLive
                 case "SEND_GIFT":
                     messageHandler.GiftMessageHandlerAsync(GiftMessage.JsonToGiftMessage(message));
                     break;
-                case "GUARD_MSG":
-                    Console.WriteLine("// TODO 上舰信息未处理");
+                case "GUARD_MSG":// TODO 上舰信息未处理
                     break;
-                case "NOTICE_MSG":
-                    Console.WriteLine("// TODO 通知信息未处理");
+                case "NOTICE_MSG":// TODO 通知信息未处理
                     break;
                 case "WELCOME":
                     messageHandler.WelcomeMessageHandlerAsync(WelcomeMessage.JsonToWelcomeMessage(message));
                     break;
-                case "SYS_MSG":
-                    Console.WriteLine("// TODO 系统消息未处理");
+                case "SYS_MSG":// TODO 系统消息未处理
                     break;
                 case "COMBO_END":
                     messageHandler.ComboEndMessageHandlerAsync(ComboEndMessage.JsonToComboEndMessage(message));
                     break;
-                case "SUPER_CHAT_MESSAGE":
-                    Console.WriteLine("// TODO 醒目留言信息未处理");
+                case "SUPER_CHAT_MESSAGE":// TODO 醒目留言信息未处理
                     break;
                 case "ROOM_REAL_TIME_MESSAGE_UPDATE":
                     messageHandler.RoomUpdateMessageHandlerAsync(RoomUpdateMessage.JsonToRoomUpdateMessage(message));
                     break;
-                case "SUPER_CHAT_MESSAGE_JPN":
-                    Console.WriteLine("// TODO 另一种醒目留言信息未处理");
+                case "SUPER_CHAT_MESSAGE_JPN":// TODO 另一种醒目留言信息未处理
                     break;
                 case "WELCOME_GUARD":
                     messageHandler.WelcomeGuardMessageHandlerAsync(WelcomeGuardMessage.JsonToWelcomeGuardMessage(message));
                     break;
-                case "ROOM_RANK":
-                    Console.WriteLine("// TODO 房间排行信息未处理");
+                case "ROOM_RANK":// TODO 房间排行信息未处理
                     break;
-                case "ENTRY_EFFECT":
-                    Console.WriteLine("// TODO 貌似是舰长的进入信息");
+                case "ENTRY_EFFECT":// TODO 貌似是舰长的进入信息
                     break;
-                case "COMBO_SEND":
-                    Console.WriteLine("//  COMBO_SEND");
+                case "COMBO_SEND": // TODO COMBO_SEND
                     break;
-                case "ANCHOR_LOT_START":
-                    Console.WriteLine("// 天选时刻");
+                case "ANCHOR_LOT_START":// TODO 天选时刻
                     break;
                 case "ACTIVITY_BANNER_UPDATE_V2":
                     break;
-                case "ROOM_CHANGE":
+                case "ROOM_CHANGE"://
+                    break;
+                case "WEEK_STAR_CLOCK":
+                    break;
+                case "LIVE":
+                    messageHandler.LiveStartMessageHandlerAsync(int.Parse(message["roomid"].ToString()));
+                    break;
+                case "PREPARING":
+                    messageHandler.LiveStopMessageHandlerAsync(int.Parse(message["roomid"].ToString()));
                     break;
                 default:
                     Console.WriteLine("// TODO 未记录的信息");

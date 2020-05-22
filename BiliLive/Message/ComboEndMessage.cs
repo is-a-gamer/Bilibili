@@ -54,7 +54,7 @@ namespace BiliLive.Message
 
         public static ComboEndMessage JsonToComboEndMessage(JObject json)
         {
-            if (!"COMBO_END".Equals(json["cmd"].ToString()))
+            if (!"COMBO_SEND".Equals(json["cmd"].ToString()))
             {
                 throw new ArgumentException("'cmd' 的值不是 'COMBO_END'");
             }

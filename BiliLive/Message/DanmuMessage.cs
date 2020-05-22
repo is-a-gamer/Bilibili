@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -37,6 +38,19 @@ namespace BiliLive.Message
         /// </summary>
         public string MedalOwnerName;
 
+        /// <summary>
+        /// 舰队等级
+        /// 0 为非船员 1 为总督 2 为提督 3 为舰长
+        /// </summary>
+        public int UserGuardLevel;
+        /// <summary>
+        /// 是不是房管
+        /// </summary>
+        public bool Admin;
+        /// <summary>
+        /// 是不是老爷
+        /// </summary>
+        public bool Vip;
         public DanmuMessage()
         {
         }
@@ -49,30 +63,22 @@ namespace BiliLive.Message
             }
 
             var info = json["info"];
-            // if (int.Parse(info[2][3].ToString()) != 0 && int.Parse(info[2][4].ToString()) != 0 )
-            // {
-            //     Console.WriteLine("老爷");
-            // }
             // if (int.Parse(info[7].ToString())!=0 && int.Parse(info[7].ToString())!=3)
             // {
-            //     Console.WriteLine("老爷");
+            //     似乎是年费老爷的判定
+            //     Debug.WriteLine("年费老爷");
             // }
             try
             {
+                var medal = "";
+                var medalLevel = 0;
+                var medalOwnerName = "";
                 //判断有没有佩戴粉丝勋章
-                if (info[3].ToArray().Length == 0)
+                if (info[3].ToArray().Length != 0)
                 {
-                    return new DanmuMessage
-                    {
-                        //不用ToString 防止json为null
-                        UserId = long.Parse(info[2][0].ToString()),
-                        Username = info[2][1].ToString(),
-                        Content = info[1].ToString(),
-                        Medal = "",
-                        MedalLevel = 0,
-                        MedalOwnerName = "",
-                        Metadata = JsonConvert.SerializeObject(json)
-                    };
+                    medal = info[3][1].ToString();
+                    medalLevel = int.Parse(info[3][0].ToString());
+                    medalOwnerName = info[3][2].ToString();
                 }
 
                 return new DanmuMessage
@@ -80,15 +86,18 @@ namespace BiliLive.Message
                     UserId = long.Parse(info[2][0].ToString()),
                     Username = info[2][1].ToString(),
                     Content = info[1].ToString(),
-                    Medal = info[3][1].ToString(),
-                    MedalLevel = (int) info[3][0],
-                    MedalOwnerName = info[3][2].ToString(),
+                    Medal = medal,
+                    MedalLevel = medalLevel,
+                    MedalOwnerName = medalOwnerName,
+                    Admin = info[2][2].ToString().Equals("1"),
+                    Vip = info[2][3].ToString().Equals("1"),
+                    UserGuardLevel = int.Parse(info[7].ToString()),
                     Metadata = JsonConvert.SerializeObject(json)
                 };
             }
             catch (ArgumentOutOfRangeException e)
             {
-                Console.WriteLine(e);
+                Debug.WriteLine(e);
                 throw;
             }
         }

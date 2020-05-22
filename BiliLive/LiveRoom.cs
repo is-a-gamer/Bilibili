@@ -151,7 +151,7 @@ namespace BiliLive
                 }
 
                 string tmpData;
-                JObject json;
+                JObject json = null;
                 if (danmuHead.Action == 5 && danmuHead.Version == ProtocolVersion)
                 {
                     //有效负载为礼物、弹幕、公告等内容数据
@@ -195,8 +195,7 @@ namespace BiliLive
                 }
                 catch (JsonReaderException e)
                 {
-                    Console.WriteLine(e);
-                    throw;
+                    Debug.WriteLine(tmpData);
                 }
                 _messageDispatcher.DispatchAsync(json, _messageHandler);
             }

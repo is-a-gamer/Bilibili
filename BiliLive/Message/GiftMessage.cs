@@ -42,14 +42,34 @@ namespace BiliLive.Message
         /// </summary>
         public string GiftType;
 
+        /// <summary>
+        /// 礼物单价
+        /// </summary>
+        public long Price;
+
+        /// <summary>
+        /// 瓜子类型
+        /// gold是金瓜子
+        /// silver是银瓜子
+        /// </summary>
+        public string CoinType;
+        
+        /// <summary>
+        /// 总价值
+        /// </summary>
+        public long TotalCoin;
+
         public static GiftMessage JsonToGiftMessage(JObject json)
         {
             if (!"SEND_GIFT".Equals(json["cmd"].ToString()))
             {
                 throw new ArgumentException("字段 'cmd' 的值不是 'SEND_GIFT'");
             }
-
             var data = json["data"];
+            if (int.Parse(data["giftId"] + "") != 1 && int.Parse(data["giftId"] + "") != 30570)
+            {
+                Console.WriteLine("b");
+            }
             return new GiftMessage
             {
                 //防止有字段不存在,所以使用 + "" 没用ToString方法
@@ -60,6 +80,8 @@ namespace BiliLive.Message
                 UserId = long.Parse(data["uid"] + ""),
                 FaceUrl = data["face"] + "",
                 GiftType = data["giftType"] + "",
+                Price = long.Parse(data["price"] + ""),
+                TotalCoin = long.Parse(data["total_coin"] + ""),
                 Metadata = JsonConvert.SerializeObject(json)
             };
         }

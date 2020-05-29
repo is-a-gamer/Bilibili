@@ -66,6 +66,23 @@ namespace BiliLive
         /// <param name="roomId"></param>
         /// <returns></returns>
         Task LiveStopMessageHandlerAsync(int roomId);
-
+        /// <summary>
+        /// 舰长,提督,总督进入房间的通知
+        /// </summary>
+        /// <param name="entryEffectMessage"></param>
+        /// <returns></returns>
+        Task EntryEffectMessageHandlerAsync(EntryEffectMessage entryEffectMessage);
+        /// <summary>
+        /// 购买舰长的信息处理
+        /// </summary>
+        /// <param name="guardBuyMessage"></param>
+        /// <returns></returns>
+        Task GuardBuyMessageHandlerAsync(GuardBuyMessage guardBuyMessage);
+        /// <summary>
+        /// 现在看,只有购买舰长的信息
+        /// </summary>
+        /// <param name="userToastMessage"></param>
+        /// <returns></returns>
+        Task UserToastMessageHandlerAsync(UserToastMessage userToastMessage);
     }
 }

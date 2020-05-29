@@ -20,7 +20,17 @@ namespace BiliLive
                     case "SEND_GIFT":
                         await messageHandler.GiftMessageHandlerAsync(GiftMessage.JsonToGiftMessage(message));
                         break;
-                    case "GUARD_MSG": // TODO 上舰信息未处理
+                    case "GUARD_MSG": // TODO 上舰信息未处理(第一次购买)
+                        Debug.WriteLine("上舰信息");
+                        break;
+                    case "GUARD_BUY":
+                        await messageHandler.GuardBuyMessageHandlerAsync(GuardBuyMessage.JsonToGuardBuyMessage(message));
+                        break;
+                    case "USER_TOAST_MSG":
+                        await messageHandler.UserToastMessageHandlerAsync(UserToastMessage.JsonToUserToastMessage(message));
+                        break;
+                    case "GUARD_LOTTERY_START": // TODO 上舰抽奖通知
+                        Debug.WriteLine("购买舰长后出现的抽奖");
                         break;
                     case "NOTICE_MSG": // TODO 通知信息未处理
                         break;
@@ -45,6 +55,7 @@ namespace BiliLive
                     case "ROOM_RANK": // TODO 房间排行信息未处理
                         break;
                     case "ENTRY_EFFECT": // TODO 貌似是舰长的进入信息
+                        await messageHandler.EntryEffectMessageHandlerAsync(EntryEffectMessage.JsonToEntryEffectMessage(message));
                         break;
                     case "COMBO_SEND": // TODO COMBO_SEND
                         await messageHandler.ComboEndMessageHandlerAsync(ComboEndMessage.JsonToComboEndMessage(message));

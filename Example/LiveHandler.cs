@@ -26,10 +26,10 @@ namespace Example
 
         public async Task GiftMessageHandlerAsync(GiftMessage giftMessage)
         {
-            Console.WriteLine($"{giftMessage.GiftName} -----> {giftMessage.GiftId},价值:");
             //如果礼物不是辣条
             if (giftMessage.GiftId!=1)
             {
+                Console.WriteLine($"{giftMessage.GiftName} -----> {giftMessage.GiftId},价值:{giftMessage.TotalCoin}个{giftMessage.CoinType}");
                 Console.WriteLine($"{giftMessage.Username}送出了{giftMessage.GiftNum}个{giftMessage.GiftName}");
             }
         }
@@ -62,6 +62,21 @@ namespace Example
         public async Task LiveStopMessageHandlerAsync(int roomId)
         {
             Console.WriteLine("直播关闭");
+        }
+
+        public async Task EntryEffectMessageHandlerAsync(EntryEffectMessage entryEffectMessage)
+        {
+            Console.WriteLine($"⚡⚡⚡<特效>⚡⚡⚡{entryEffectMessage.CopyWriting}⚡⚡⚡<特效>⚡⚡⚡");
+        }
+
+        public async Task GuardBuyMessageHandlerAsync(GuardBuyMessage guardBuyMessage)
+        {
+            Console.WriteLine($"{guardBuyMessage.Username}购买了{guardBuyMessage.Num}月的{guardBuyMessage.GiftName}");
+        }
+
+        public async Task UserToastMessageHandlerAsync(UserToastMessage userToastMessage)
+        {
+            Console.WriteLine($"{userToastMessage.Username}购买了{userToastMessage.Num}{userToastMessage.Unit}的{userToastMessage.RoleName}");
         }
     }
 }

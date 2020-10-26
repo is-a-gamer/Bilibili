@@ -3,6 +3,9 @@ using BitConverter;
 
 namespace BiliLive
 {
+    /// <summary>
+    /// 发送数据的消息的头信息
+    /// </summary>
     public class DanmuHead
     {
         /// <summary>
@@ -30,7 +33,12 @@ namespace BiliLive
         /// </summary>
         public int Parameter;
 
-
+        /// <summary>
+        /// 将从流中读取的内容转换为消息头
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public static DanmuHead BufferToDanmuHead(byte[] buffer)
         {
             if (buffer.Length < 16)

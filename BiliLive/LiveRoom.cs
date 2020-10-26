@@ -18,16 +18,20 @@ namespace BiliLive
     {
         //直播页面的房间ID
         private int _shotRoomId;
-
         //10秒无法连接判定连接失败
         private readonly HttpClient _httpClient = new HttpClient {Timeout = TimeSpan.FromSeconds(10)};
+        //真正的直播间ID
         private int _roomId;
         private readonly TcpClient _tcpClient = new TcpClient();
         private Stream _roomStream;
+        //消息版本号,现在固定为2
         private const short ProtocolVersion = 2;
+        //消息头的长度,现在版本固定为16
+        //DanmuHead的方法BufferToDanmuHead中有个写死的16,如果后续有修改要一起修改
         private const int ProtocolHeadLength = 16;
         private readonly IMessageHandler _messageHandler;
         private readonly IMessageDispatcher _messageDispatcher;
+        //连接状态
         private bool _connected = false;
 
         public LiveRoom(int roomId, IMessageHandler messageHandler)
@@ -40,7 +44,7 @@ namespace BiliLive
         public LiveRoom(int roomId, IMessageHandler messageHandler, IMessageDispatcher messageDispatcher)
         {
             _shotRoomId = roomId;
-            this._messageDispatcher = messageDispatcher;
+            _messageDispatcher = messageDispatcher;
             _messageHandler = messageHandler;
         }
         
@@ -128,7 +132,6 @@ namespace BiliLive
             {
                 var headBuffer = new byte[ProtocolHeadLength];
                 //先读取一次头信息
-                //BUG 高频率发送弹幕只能读取到一条
                 await _roomStream.ReadAsync(headBuffer, 0, ProtocolHeadLength);
                 //解析头信息
                 DanmuHead danmuHead = DanmuHead.BufferToDanmuHead(headBuffer);
@@ -248,7 +251,6 @@ namespace BiliLive
 
             var buffer = new byte[packageLength];
             var ms = new MemoryStream(buffer);
-
             await ms.WriteAsync(EndianBitConverter.BigEndian.GetBytes(buffer.Length), 0, 4);
             await ms.WriteAsync(EndianBitConverter.BigEndian.GetBytes(headLength), 0, 2);
             await ms.WriteAsync(EndianBitConverter.BigEndian.GetBytes(version), 0, 2);

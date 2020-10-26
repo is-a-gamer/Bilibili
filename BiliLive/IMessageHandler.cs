@@ -4,6 +4,9 @@ using BiliLive.Message;
 
 namespace BiliLive
 {
+    /// <summary>
+    /// 消息处理器
+    /// </summary>
     public interface IMessageHandler
     {
         /// <summary>

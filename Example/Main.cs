@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using BiliLive;
 
 namespace Example
@@ -16,12 +15,12 @@ namespace Example
         public async static void Start()
         {
             LiveHandler liveHandler = new LiveHandler();
-            var sroomid = Console.ReadLine();
-            var roomid = int.Parse(sroomid);
+            // var sroomid = Console.ReadLine();
+            // var roomid = int.Parse(sroomid);
             //第一个参数是直播间的房间号
             //第二个参数是自己实现的处理器
             //第三个参数是可选的,可以是默认的消息分发器,也可以是自己实现的消息分发器
-            LiveRoom room = new LiveRoom(roomid, liveHandler);
+            LiveRoom room = new LiveRoom(292397, liveHandler);
             //等待连接,该方法会反回是否连接成功
             //或者使用room.Connected,该属性会反馈连接状态
             if (!await room.ConnectAsync())

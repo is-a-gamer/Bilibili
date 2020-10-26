@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using BiliLive.Message;
 using Newtonsoft.Json.Linq;
 
-namespace BiliLive
+namespace BiliLive.Lib
 {
     public class MessageDispatcher : IMessageDispatcher
     {
@@ -74,8 +74,17 @@ namespace BiliLive
                     case "PREPARING":
                         await messageHandler.LiveStopMessageHandlerAsync(int.Parse(message["roomid"].ToString()));
                         break;
+                    case "INTERACT_WORD":
+                        break;
+                    case "ONLINERANK": //更新排行榜信息
+                        break;
+                    case "PANEL": //更新分区排行等信息
+                        break;
+                    case "ROOM_BANNER":
+                        break;
                     default:
                         Debug.WriteLine("// TODO 未记录的信息");
+                        Debug.WriteLine(message);
                         break;
                 }
             }

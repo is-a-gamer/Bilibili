@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using BiliLive;
+using BiliLive.Lib;
 using BiliLive.Message;
 namespace Example
 {

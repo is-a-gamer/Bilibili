@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
-namespace BiliLive
+namespace BiliLive.Lib
 {
     /// <summary>
     /// 消息分发器接口

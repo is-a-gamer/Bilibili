@@ -193,15 +193,13 @@ namespace BiliLive
                                 json = JObject.Parse(jsonStr);
                                 _messageDispatcher.DispatchAsync(json, _messageHandler);
                             }
+                            continue;
                         }
                         catch (Exception e)
                         {
                             //读数据超出长度
-                            Debug.WriteLine("------");
                             Debug.WriteLine(e);
-                            Debug.WriteLine(json);
-                            Debug.WriteLine("------");
-                            // throw;
+                            throw;
                         }
                     }
                 }
@@ -217,8 +215,10 @@ namespace BiliLive
                 {
                     Debug.WriteLine(tmpData);
                 }
-                
-                _messageDispatcher.DispatchAsync(json, _messageHandler);
+                if (!"DANMU_MSG".Equals(json["cmd"].ToString()) && !"SEND_GIFT".Equals(json["cmd"].ToString()))
+                {
+                    _messageDispatcher.DispatchAsync(json, _messageHandler);
+                }
             }
         }
 

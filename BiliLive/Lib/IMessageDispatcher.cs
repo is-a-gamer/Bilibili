@@ -9,7 +9,9 @@ namespace BiliLive.Lib
     public interface IMessageDispatcher
     {
         /// <summary>
-        /// 内部方法,不需要手动调用.只需要实现方法
+        /// 不需要手动调用.只需要实现方法
+        ///
+        /// 
         ///{
         ///case "DANMU_MSG":
         ///await messageHandler.DanmuMessageHandlerAsync(DanmuMessage.JsonToDanmuMessage(message));

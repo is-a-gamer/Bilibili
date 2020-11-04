@@ -47,11 +47,12 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="IMessageDispatcher.cs" />
-        <Compile Include="DanmuHead.cs" />
+        <Compile Include="Lib\DanmuHead.cs" />
+        <Compile Include="Lib\IMessageDispatcher.cs" />
+        <Compile Include="Lib\IMessageHandler.cs" />
+        <Compile Include="Lib\MessageDispatcher.cs" />
+        <Compile Include="Lib\Utils.cs" />
         <Compile Include="LiveRoom.cs" />
-        <Compile Include="IMessageHandler.cs" />
-        <Compile Include="MessageDispatcher.cs" />
         <Compile Include="Message\BaseMessage.cs" />
         <Compile Include="Message\ComboEndMessage.cs" />
         <Compile Include="Message\DanmuMessage.cs" />

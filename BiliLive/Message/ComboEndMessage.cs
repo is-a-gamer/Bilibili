@@ -62,9 +62,8 @@ namespace BiliLive.Message
             var data = json["data"];
             return new ComboEndMessage
             {
-                //不用ToString 防止json为null
                 UserId = long.Parse(data["uid"].ToString()),
-                Username = data["uname"].ToString(),
+                Username = data["uname"]?.ToString(),
                 ComboNum = int.Parse(data["combo_num"].ToString()),
                 GiftNum = int.Parse(data["gift_num"].ToString()),
                 BatchComboNum = int.Parse(data["gift_num"].ToString()),

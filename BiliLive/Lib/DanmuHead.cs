@@ -1,7 +1,7 @@
 using System;
 using BitConverter;
 
-namespace BiliLive
+namespace BiliLive.Lib
 {
     /// <summary>
     /// 发送数据的消息的头信息

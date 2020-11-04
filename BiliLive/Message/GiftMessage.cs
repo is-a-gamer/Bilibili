@@ -66,10 +66,6 @@ namespace BiliLive.Message
                 throw new ArgumentException("字段 'cmd' 的值不是 'SEND_GIFT'");
             }
             var data = json["data"];
-            if (int.Parse(data["giftId"] + "") != 1 && int.Parse(data["giftId"] + "") != 30570)
-            {
-                Console.WriteLine("b");
-            }
             return new GiftMessage
             {
                 //防止有字段不存在,所以使用 + "" 没用ToString方法

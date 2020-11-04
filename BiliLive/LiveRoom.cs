@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using BiliLive.Lib;
 using BitConverter;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -18,19 +19,26 @@ namespace BiliLive
     {
         //直播页面的房间ID
         private int _shotRoomId;
+
         //10秒无法连接判定连接失败
         private readonly HttpClient _httpClient = new HttpClient {Timeout = TimeSpan.FromSeconds(10)};
+
         //真正的直播间ID
         private int _roomId;
         private readonly TcpClient _tcpClient = new TcpClient();
+
         private Stream _roomStream;
+
         //消息版本号,现在固定为2
         private const short ProtocolVersion = 2;
+
         //消息头的长度,现在版本固定为16
         //DanmuHead的方法BufferToDanmuHead中有个写死的16,如果后续有修改要一起修改
         private const int ProtocolHeadLength = 16;
         private readonly IMessageHandler _messageHandler;
+
         private readonly IMessageDispatcher _messageDispatcher;
+
         //连接状态
         private bool _connected = false;
 
@@ -47,7 +55,7 @@ namespace BiliLive
             _messageDispatcher = messageDispatcher;
             _messageHandler = messageHandler;
         }
-        
+
         /// <summary>
         /// 开启连接
         /// </summary>
@@ -122,6 +130,7 @@ namespace BiliLive
 #pragma warning restore 4014
             return true;
         }
+
         /// <summary>
         /// 循环读取消息,禁止重复调用
         /// </summary>
@@ -162,6 +171,7 @@ namespace BiliLive
                     dataBuffer = new byte[danmuHead.MessageLength()];
                     await _roomStream.ReadAsync(dataBuffer, 0, danmuHead.MessageLength());
                     //之后把数据放入到内存流
+                    string jsonStr;
                     using (var ms = new MemoryStream(dataBuffer, 2, danmuHead.MessageLength() - 2))
                     {
                         //使用内存流生成解压流(压缩流) 
@@ -174,19 +184,24 @@ namespace BiliLive
                                 await deflate.ReadAsync(headerbuffer, 0, ProtocolHeadLength);
                                 danmuHead = DanmuHead.BufferToDanmuHead(headerbuffer);
                                 var messageBuffer = new byte[danmuHead.MessageLength()];
-                                await deflate.ReadAsync(messageBuffer, 0, danmuHead.MessageLength());
-                                var jsonStr = Encoding.UTF8.GetString(messageBuffer, 0, danmuHead.MessageLength());
+                                var readLength = await deflate.ReadAsync(messageBuffer, 0, danmuHead.MessageLength());
+                                jsonStr = Encoding.UTF8.GetString(messageBuffer, 0, danmuHead.MessageLength());
+                                if (readLength == 0)
+                                {
+                                    break;
+                                }
                                 json = JObject.Parse(jsonStr);
                                 _messageDispatcher.DispatchAsync(json, _messageHandler);
                             }
+                            continue;
                         }
-                        catch (Exception)
+                        catch (Exception e)
                         {
                             //读数据超出长度
+                            Debug.WriteLine(e);
+                            throw;
                         }
                     }
-
-                    continue;
                 }
 
                 dataBuffer = new byte[danmuHead.MessageLength()];
@@ -200,9 +215,13 @@ namespace BiliLive
                 {
                     Debug.WriteLine(tmpData);
                 }
-                _messageDispatcher.DispatchAsync(json, _messageHandler);
+                if (!"DANMU_MSG".Equals(json["cmd"].ToString()) && !"SEND_GIFT".Equals(json["cmd"].ToString()))
+                {
+                    _messageDispatcher.DispatchAsync(json, _messageHandler);
+                }
             }
         }
+
         /// <summary>
         /// 发送加入房间的消息
         /// </summary>
@@ -223,6 +242,7 @@ namespace BiliLive
             await SendSocketDataAsync(7, body);
             return true;
         }
+
         /// <summary>
         /// 发送消息的方法
         /// </summary>
@@ -233,7 +253,7 @@ namespace BiliLive
         {
             return SendSocketDataAsync(ProtocolHeadLength, ProtocolVersion, action, 1, body);
         }
-        
+
         /// <summary>
         /// 发送消息的方法
         /// </summary>
@@ -263,6 +283,7 @@ namespace BiliLive
 
             await _roomStream.WriteAsync(buffer, 0, buffer.Length);
         }
+
         /// <summary>
         /// 循环发送心跳,禁止重复调用
         /// </summary>
@@ -285,6 +306,7 @@ namespace BiliLive
                     catch (Exception e)
                     {
                         _connected = false;
+                        Console.WriteLine("发送心跳失败");
                         throw e;
                     }
                 }

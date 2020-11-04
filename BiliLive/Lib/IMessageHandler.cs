@@ -1,8 +1,7 @@
 ﻿using System.Threading.Tasks;
-using BiliLive;
 using BiliLive.Message;
 
-namespace BiliLive
+namespace BiliLive.Lib
 {
     /// <summary>
     /// 消息处理器

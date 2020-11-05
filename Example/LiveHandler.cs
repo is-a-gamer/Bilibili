@@ -29,8 +29,7 @@ namespace Example
             //如果礼物不是辣条
             if (giftMessage.GiftId!=1)
             {
-                Console.WriteLine($"{giftMessage.GiftName} -----> {giftMessage.GiftId},价值:{giftMessage.TotalCoin}个{giftMessage.CoinType}");
-                Console.WriteLine($"{giftMessage.Username}送出了{giftMessage.GiftNum}个{giftMessage.GiftName}");
+                Console.WriteLine($"{giftMessage.Username}送出了{giftMessage.GiftNum}个{giftMessage.GiftName},价值:{giftMessage.TotalCoin}个{giftMessage.CoinType}");
             }
         }
 
@@ -41,7 +40,7 @@ namespace Example
 
         public async Task ComboEndMessageHandlerAsync(ComboEndMessage comboEndMessage)
         {
-            Console.WriteLine($"{comboEndMessage.Username}的${comboEndMessage.GiftName}连击结束了,送出了{comboEndMessage.ComboNum}个");
+            Console.WriteLine($"{comboEndMessage.Username}的{comboEndMessage.GiftName}连击结束了,送出了{comboEndMessage.ComboNum}个,总价值{comboEndMessage.Price}个金瓜子");
         }
 
         public async Task RoomUpdateMessageHandlerAsync(RoomUpdateMessage roomUpdateMessage)

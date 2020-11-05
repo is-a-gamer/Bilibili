@@ -22,6 +22,7 @@ namespace BiliLive.Lib
                         break;
                     case "GUARD_MSG": // TODO 上舰信息未处理(第一次购买)
                         Debug.WriteLine("上舰信息");
+                        Debug.WriteLine(message);
                         break;
                     case "GUARD_BUY":
                         await messageHandler.GuardBuyMessageHandlerAsync(GuardBuyMessage.JsonToGuardBuyMessage(message));
@@ -31,13 +32,18 @@ namespace BiliLive.Lib
                         break;
                     case "GUARD_LOTTERY_START": // TODO 上舰抽奖通知
                         Debug.WriteLine("购买舰长后出现的抽奖");
+                        Debug.WriteLine(message);
                         break;
                     case "NOTICE_MSG": // TODO 通知信息未处理
+                        Debug.WriteLine(message);
+                        Debug.WriteLine(message);
                         break;
                     case "WELCOME":
                         await messageHandler.WelcomeMessageHandlerAsync(WelcomeMessage.JsonToWelcomeMessage(message));
                         break;
                     case "SYS_MSG": // TODO 系统消息未处理
+                        Debug.WriteLine("SYS_MSG");
+                        Debug.WriteLine(message);                        
                         break;
                     case "COMBO_END":
                         await messageHandler.ComboEndMessageHandlerAsync(ComboEndMessage.JsonToComboEndMessage(message));
@@ -61,12 +67,20 @@ namespace BiliLive.Lib
                         await messageHandler.ComboEndMessageHandlerAsync(ComboEndMessage.JsonToComboEndMessage(message));
                         break;
                     case "ANCHOR_LOT_START": // TODO 天选时刻
+                        Debug.WriteLine("ANCHOR_LOT_START");
+                        Debug.WriteLine(message);                        
                         break;
                     case "ACTIVITY_BANNER_UPDATE_V2":
+                        Debug.WriteLine("ACTIVITY_BANNER_UPDATE_V2");
+                        Debug.WriteLine(message);                        
                         break;
                     case "ROOM_CHANGE": //
+                        Debug.WriteLine("ROOM_CHANGE");
+                        Debug.WriteLine(message);                        
                         break;
                     case "WEEK_STAR_CLOCK":
+                        Debug.WriteLine("WEEK_STAR_CLOCK");
+                        Debug.WriteLine(message);                        
                         break;
                     case "LIVE":
                         await messageHandler.LiveStartMessageHandlerAsync(int.Parse(message["roomid"].ToString()));
@@ -75,15 +89,23 @@ namespace BiliLive.Lib
                         await messageHandler.LiveStopMessageHandlerAsync(int.Parse(message["roomid"].ToString()));
                         break;
                     case "INTERACT_WORD":
+                        Debug.WriteLine("INTERACT_WORD");
+                        // Debug.WriteLine(message);                        
                         break;
                     case "ONLINERANK": //更新排行榜信息
+                        Debug.WriteLine("ONLINERANK");
+                        Debug.WriteLine(message);                        
                         break;
                     case "PANEL": //更新分区排行等信息
+                        Debug.WriteLine("PANEL");
+                        Debug.WriteLine(message);                        
                         break;
                     case "ROOM_BANNER":
+                        Debug.WriteLine("ROOM_BANNER");
+                        Debug.WriteLine(message);
                         break;
                     default:
-                        Debug.WriteLine("// TODO 未记录的信息");
+                        Debug.WriteLine("未记录的信息");
                         Debug.WriteLine(message);
                         break;
                 }

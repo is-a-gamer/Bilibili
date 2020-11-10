@@ -63,11 +63,6 @@ namespace BiliLive.Message
             }
 
             var info = json["info"];
-            // if (int.Parse(info[7].ToString())!=0 && int.Parse(info[7].ToString())!=3)
-            // {
-            //     似乎是年费老爷的判定
-            //     Debug.WriteLine("年费老爷");
-            // }
             try
             {
                 var medal = "";

@@ -68,7 +68,6 @@ namespace BiliLive.Message
             var data = json["data"];
             return new GiftMessage
             {
-                //防止有字段不存在,所以使用 + "" 没用ToString方法
                 GiftName = data["giftName"] + "",
                 GiftId = int.Parse(data["giftId"] + ""),
                 GiftNum = int.Parse(data["num"] + ""),
@@ -78,6 +77,7 @@ namespace BiliLive.Message
                 GiftType = data["giftType"] + "",
                 Price = long.Parse(data["price"] + ""),
                 TotalCoin = long.Parse(data["total_coin"] + ""),
+                CoinType = data["coin_type"] + "",
                 Metadata = JsonConvert.SerializeObject(json)
             };
         }
